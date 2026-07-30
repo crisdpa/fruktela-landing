@@ -1,0 +1,16 @@
+{
+  "name": "Fruktela — Gestión de alimentos a domicilio",
+  "short_name": "Fruktela",
+  "description": "Pedidos, clientes, productos y entregas de alimentos a domicilio en una sola app.",
+  "lang": "es-MX",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FFFCF8",
+  "theme_color": "#E8761E",
+  "icons": [
+    { "src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

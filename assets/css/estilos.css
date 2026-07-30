@@ -1,0 +1,548 @@
+/* ==========================================================================
+   Fruktela — landing
+   Mobile first: la base es el celular; los @media suben a 641px y 961px.
+   ========================================================================== */
+
+/* ---------- Fuentes ----------
+   Ambas son variables (Baloo 2: wght 400-800, Plus Jakarta Sans: wght 200-800),
+   así que un solo archivo por rango unicode cubre todos los pesos. Solo se
+   incluyen latin y latin-ext: unicode-range evita descargar el que no se use. */
+@font-face {
+  font-family: 'Baloo 2';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/baloo2-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('../fonts/baloo2-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('../fonts/plus-jakarta-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url('../fonts/plus-jakarta-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  --naranja: #E8761E;
+  --naranja-txt: #E4761A;
+  --naranja-oscuro: #C25812;
+  --naranja-tinta: #A8480C;
+  --crema: #FFF7EF;
+  --crema-alt: #FFFCF8;
+  --tinta: #2A2521;
+  --gris: #6B635C;
+  --gris-claro: #8A7A68;
+  --linea: #EFE3D5;
+  --verde: #2F6B2F;
+  --verde-hover: #25551F;
+  --max: 1200px;
+  --radio: 18px;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--crema-alt);
+  color: var(--tinta);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+h1, h2, h3 {
+  font-family: 'Baloo 2', system-ui, cursive;
+  margin: 0;
+  letter-spacing: -.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+
+p { margin: 0; }
+
+a { color: var(--naranja-txt); text-decoration: none; }
+a:hover { color: var(--naranja-oscuro); }
+
+/* Foco visible en todo lo interactivo: el navegador lo pinta solo con teclado. */
+:focus-visible {
+  outline: 3px solid var(--tinta);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.top :focus-visible,
+.cierre :focus-visible,
+footer :focus-visible { outline-color: #fff; }
+
+/* Salto al contenido para lectores de pantalla y navegación por teclado. */
+.saltar {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 12px 20px;
+  background: #fff;
+  color: var(--naranja-tinta);
+  font-weight: 700;
+  border-radius: 0 0 10px 0;
+}
+.saltar:focus { left: 0; }
+
+/* ---------- Utilidades ---------- */
+/* padding-inline y no el atajo `padding`: .nav, .hero y .menu-movil también
+   son .wrap y definen su propio padding vertical. */
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-inline: 20px;
+}
+
+.eyebrow {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #A18F7C;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 15px 30px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 700;
+  transition: background .18s ease, color .18s ease;
+}
+.btn-verde { background: var(--verde); color: #fff; }
+.btn-verde:hover { background: var(--verde-hover); color: #fff; }
+.btn-blanco { background: #fff; color: var(--naranja-oscuro); }
+.btn-blanco:hover { background: #FFF0DC; color: var(--naranja-tinta); }
+.btn-naranja { background: var(--naranja); color: #fff; }
+.btn-naranja:hover { background: var(--naranja-oscuro); color: #fff; }
+
+/* ---------- Encabezado ---------- */
+.top { background: var(--naranja); color: #fff; }
+/* Ancla del panel desplegable y lo deja por encima del botón flotante. */
+.barra { position: relative; z-index: 60; }
+/* El hero es un <section>, así que este padding anula el de `section`. */
+.top-pad { padding: 0 0 72px; }
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-block: 18px;
+}
+
+.marca { display: flex; align-items: center; gap: 10px; flex: none; }
+.marca img { width: 32px; height: 32px; }
+.marca span {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1;
+  color: #fff;
+}
+
+/* En celular el menú y el botón viven dentro del panel desplegable. */
+.nav nav { display: none; }
+.nav > .btn { display: none; }
+
+/* Botón hamburguesa: solo tiene sentido con JS, por eso lo revela main.js. */
+.menu-toggle {
+  display: none;
+  margin-left: auto;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .16);
+  color: #fff;
+  cursor: pointer;
+}
+.js .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+.menu-toggle:hover { background: rgba(255, 255, 255, .28); }
+.menu-toggle svg { width: 22px; height: 22px; display: block; }
+.menu-toggle .icono-cerrar { display: none; }
+.menu-toggle[aria-expanded='true'] .icono-abrir { display: none; }
+.menu-toggle[aria-expanded='true'] .icono-cerrar { display: block; }
+
+/* Sin JS el menú se queda desplegado y en flujo: siempre hay navegación. */
+.menu-movil {
+  display: flex;
+  flex-direction: column;
+  padding-block: 4px 20px;
+}
+
+/* Con JS es un panel que se sobrepone al hero en vez de empujarlo, con
+   superficie propia para que no se confunda con el fondo naranja de atrás. */
+.js .menu-movil {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 60;
+  background: var(--naranja-oscuro);
+  border-radius: 0 0 22px 22px;
+  box-shadow: 0 20px 44px rgba(60, 25, 0, .34);
+  padding-block: 8px 22px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s;
+}
+.js .menu-movil.abierto {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-movil a:not(.btn) {
+  color: rgba(255, 255, 255, .94);
+  font-size: 17px;
+  font-weight: 600;
+  padding: 14px 2px;
+}
+.menu-movil a:not(.btn) + a:not(.btn) { border-top: 1px solid rgba(255, 255, 255, .16); }
+.menu-movil a:not(.btn):hover { color: #fff; }
+.menu-movil .btn { margin-top: 18px; color: var(--naranja-oscuro); }
+.menu-movil .btn:hover { color: var(--naranja-tinta); }
+
+/* ---------- Hero ---------- */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: center;
+  padding-block: 40px 0;
+}
+.hero-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 24px;
+}
+.pill {
+  align-self: start;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .18);
+  font-size: 14px;
+  font-weight: 600;
+}
+.hero h1 { font-size: clamp(40px, 6.2vw, 66px); font-weight: 800; }
+.hero p.lead {
+  font-size: clamp(17px, 2vw, 20px);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, .92);
+}
+.cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.cta-row .btn { width: 100%; }
+.cta-note { font-size: 15px; color: rgba(255, 255, 255, .9); }
+
+.fono {
+  justify-self: center;
+  width: min(320px, 80vw);
+  border-radius: 44px;
+  background: #191512;
+  padding: 10px;
+  box-shadow: 0 26px 60px rgba(90, 40, 0, .34);
+}
+.fono img { border-radius: 34px; }
+.hero .fono { margin: 0 auto; }
+
+/* ---------- Tarjeta de beneficios ---------- */
+.beneficios {
+  margin-top: -44px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 26px;
+  box-shadow: 0 14px 38px rgba(42, 37, 33, .1), 0 0 0 1px var(--linea);
+}
+.beneficios h3 {
+  font-size: 25px;
+  font-weight: 700;
+  color: var(--naranja-txt);
+  margin-bottom: 6px;
+}
+.beneficios p { font-size: 15px; color: var(--gris); }
+
+/* ---------- Secciones ---------- */
+section { padding: 52px 0; }
+
+.sec-head {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.sec-head h2 { font-size: clamp(30px, 3.6vw, 44px); font-weight: 700; }
+.sec-head .eyebrow { display: block; margin-bottom: 12px; }
+.sec-head p { font-size: 16px; color: var(--gris); }
+
+.crema {
+  background: var(--crema);
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+}
+
+/* ---------- Tu página de pedidos ---------- */
+.pasos-pantallas { display: grid; grid-template-columns: 1fr; gap: 28px; }
+.paso {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+.paso .fono {
+  width: min(250px, 72vw);
+  border-radius: 38px;
+  background: var(--tinta);
+  padding: 9px;
+  box-shadow: 0 14px 34px rgba(42, 37, 33, .16);
+}
+.paso .fono img { border-radius: 30px; }
+.paso h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0;
+  max-width: 38ch;
+}
+.paso p { font-size: 15px; color: var(--gris); max-width: 38ch; }
+
+/* ---------- La app ---------- */
+.app-grid { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+.app-grid .fono {
+  width: min(320px, 100%);
+  margin: 0 auto;
+  background: var(--tinta);
+  box-shadow: 0 22px 52px rgba(42, 37, 33, .2);
+}
+.funciones { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.func { border-radius: 16px; padding: 24px 26px; }
+.func h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+.func p { font-size: 15px; color: #5C5148; }
+.f1 { background: #FDECD9; } .f1 h3 { color: var(--naranja-tinta); }
+.f2 { background: #E7F1E4; } .f2 h3 { color: var(--verde); }
+.f3 { background: #FFF0DC; } .f3 h3 { color: #8A5A00; }
+.f4 { background: #F6EADB; } .f4 h3 { color: #5C5148; }
+
+/* ---------- Por qué cambiarte ---------- */
+.porque { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: center; }
+.porque h2 { font-size: clamp(28px, 3.2vw, 40px); font-weight: 700; margin: 12px 0 14px; }
+.porque .intro { font-size: 17px; color: var(--gris); }
+.dolores { display: grid; grid-template-columns: 1fr; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.dolor {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 0 0 1px var(--linea);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.dolor span {
+  display: block;
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: #E45424;
+  margin-bottom: 10px;
+}
+
+/* ---------- Tres pasos ---------- */
+.pasos { display: grid; grid-template-columns: 1fr; gap: 20px; }
+.paso-num {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 30px;
+  border-radius: 18px;
+  background: var(--tinta);
+  color: var(--crema);
+}
+.paso-num b {
+  font-family: 'Baloo 2', cursive;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: 1;
+  color: #F09024;
+}
+.paso-num h3 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.paso-num p { font-size: 15px; color: rgba(255, 247, 239, .72); }
+.paso-num.destacado { background: var(--naranja); color: #fff; }
+.paso-num.destacado b { color: #FFF0DC; }
+.paso-num.destacado p { color: rgba(255, 255, 255, .86); }
+
+/* ---------- Cierre ---------- */
+.cierre {
+  background: var(--naranja);
+  color: #fff;
+  text-align: center;
+  padding: 88px 0;
+}
+.cierre .inner { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.cierre img { width: 56px; height: 56px; }
+.cierre h2 { font-size: clamp(32px, 4.6vw, 52px); font-weight: 800; }
+.cierre p {
+  font-size: clamp(16px, 1.8vw, 19px);
+  color: rgba(255, 255, 255, .9);
+  max-width: 46ch;
+}
+
+/* ---------- Pie ---------- */
+footer { background: var(--tinta); color: rgba(255, 247, 239, .7); padding: 34px 0; }
+.foot {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.foot .marca span { font-size: 21px; color: var(--crema); }
+.foot img { width: 26px; height: 26px; }
+.foot a { color: rgba(255, 247, 239, .85); }
+.foot a:hover { color: #fff; }
+.foot small { font-size: 14px; }
+
+/* ---------- Botón flotante de WhatsApp ---------- */
+.flotante {
+  position: fixed;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 50;
+  box-shadow: 0 10px 26px rgba(47, 107, 47, .4);
+  border-radius: 999px;
+}
+.flotante[hidden] { display: none; }
+.flotante .btn { min-height: 56px; padding: 16px 26px; font-size: 16px; width: 100%; }
+
+/* ==========================================================================
+   ≥ 641px — tablet
+   ========================================================================== */
+@media (min-width: 641px) {
+  .wrap { padding-inline: 24px; }
+  section { padding: 76px 0; }
+  .top-pad { padding: 0 0 96px; }
+
+  .cta-row .btn { width: auto; }
+
+  .beneficios { margin-top: -60px; }
+
+  .sec-head {
+    flex-direction: row;
+    align-items: end;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+  .sec-head p { max-width: 32ch; }
+
+  .funciones, .dolores { grid-template-columns: 1fr 1fr; }
+
+  /* En pantallas anchas un botón de borde a borde se ve desproporcionado. */
+  .menu-movil .btn { align-self: start; }
+
+  .foot { flex-direction: row; align-items: center; }
+
+  .flotante { left: auto; right: 20px; }
+  .flotante .btn { width: auto; }
+}
+
+/* ==========================================================================
+   ≥ 961px — escritorio
+   ========================================================================== */
+@media (min-width: 961px) {
+  .nav nav { display: flex; gap: 24px; font-size: 15px; font-weight: 500; }
+  .nav nav a { color: rgba(255, 255, 255, .88); }
+  .nav nav a:hover { color: #fff; }
+  .nav > .btn {
+    display: inline-flex;
+    margin-left: auto;
+    min-height: 44px;
+    padding: 11px 22px;
+    font-size: 15px;
+  }
+  .js .menu-toggle { display: none; }
+  .menu-movil, .js .menu-movil { display: none; }
+
+  .hero { grid-template-columns: 1.08fr .92fr; gap: 40px; }
+  .hero p.lead { max-width: 34ch; }
+  .hero .fono { margin: 0; }
+
+  .beneficios { grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 34px 38px; }
+
+  .pasos-pantallas { grid-template-columns: repeat(3, 1fr); }
+  .paso { align-items: stretch; text-align: left; }
+  .paso .fono { width: min(272px, 100%); }
+  .paso h3, .paso p { max-width: none; }
+
+  .app-grid { grid-template-columns: .85fr 1.15fr; gap: 44px; }
+  .app-grid .fono { margin: 0; }
+
+  .porque { grid-template-columns: .9fr 1.1fr; gap: 52px; }
+
+  .pasos { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- Preferencias del sistema ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
