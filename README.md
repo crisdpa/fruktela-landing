@@ -25,8 +25,8 @@ assets/
   icons/                favicon, iconos de instalación y la tarjeta de compartir
 
 tools/
-  source/               PNG originales sin comprimir (no se sirven)
   build-assets.py       Genera assets/img y assets/icons
+
   og-template.html      Plantilla de la tarjeta de compartir
   build-og.sh           Captura la plantilla a assets/icons/og-image.png
 ```
@@ -91,11 +91,24 @@ relativas (`assets/...` en vez de `/assets/...`).
 
 ## Regenerar assets
 
-Solo hace falta si cambian los PNG de `tools/source/`.
-
 ### Imágenes e iconos
 
-Requiere Pillow, `cwebp` y `avifenc`:
+Los PNG de origen **no están versionados**: pesan casi 1 MB, GitHub Pages los
+serviría sin que nadie los pida y lo que la página usa son los derivados que ya
+están en `assets/img/`. Solo hacen falta para volver a generarlos.
+
+Para reponerlos en `tools/source/`, o los exportas de nuevo desde el diseño, o
+los sacas del historial, donde siguen estando:
+
+```bash
+git checkout a473c88 -- tools/source/
+```
+
+Se esperan siete archivos: `pagina-pedidos.png`, `paso-1-telefono.png`,
+`paso-2-catalogo.png`, `paso-3-resumen.png`, `app-pedidos.png`,
+`logo-blanco.png` e `icono-app.png`. El script avisa si falta alguno.
+
+Después, con Pillow, `cwebp` y `avifenc`:
 
 ```bash
 brew install webp libavif
@@ -105,6 +118,8 @@ python3 tools/build-assets.py
 
 Genera, para cada captura, AVIF y WebP en 448w y 896w más un PNG de respaldo,
 y reconstruye el juego de iconos a partir de `tools/source/icono-app.png`.
+
+Cuando termines, **vuelve a quitar `tools/source/`** antes de commitear.
 
 ### Tarjeta de compartir (Open Graph)
 

@@ -6,6 +6,11 @@ Salidas:
   assets/img/     logo blanco en WebP + PNG
   assets/icons/   favicon.ico, iconos PWA, apple-touch-icon y og-image base
 
+Los PNG de origen NO están versionados: pesan casi 1 MB, GitHub Pages los
+serviría sin que nadie los pida y los assets ya generados viven en assets/.
+Para volver a correr este script hay que reponerlos en tools/source/ (ver el
+README, sección "Regenerar assets").
+
 Requisitos: Pillow, cwebp y avifenc en el PATH.
 Uso: python3 tools/build-assets.py
 """
@@ -226,11 +231,26 @@ def iconos() -> None:
     print("  iconos: favicon.ico (16/32/48), 192, 512, maskable, apple-touch")
 
 
+ESPERADOS = CAPTURAS + ("logo-blanco", "icono-app")
+
+
 def main() -> int:
     for herramienta in ("cwebp", "avifenc"):
         if shutil.which(herramienta) is None:
             print(f"falta {herramienta} en el PATH", file=sys.stderr)
             return 1
+
+    faltan = [n for n in ESPERADOS if not (ORIGEN / f"{n}.png").is_file()]
+    if faltan:
+        print(f"Faltan los PNG de origen en {ORIGEN}:", file=sys.stderr)
+        for nombre in faltan:
+            print(f"  {nombre}.png", file=sys.stderr)
+        print("\nNo se versionan a propósito. Siguen en el historial:\n"
+              "  git checkout a473c88 -- tools/source/\n"
+              "o vuelve a exportarlos desde el diseño original.",
+              file=sys.stderr)
+        return 1
+
     IMG.mkdir(parents=True, exist_ok=True)
     ICONS.mkdir(parents=True, exist_ok=True)
     print("capturas...")

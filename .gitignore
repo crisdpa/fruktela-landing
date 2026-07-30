@@ -1,2 +1,5 @@
 .DS_Store
 .playwright-mcp/
+
+# PNG de origen: se reponen solo para regenerar assets (ver README)
+tools/source/
