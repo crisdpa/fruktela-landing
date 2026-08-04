@@ -19,7 +19,7 @@ site.webmanifest        Nombre, colores e iconos de instalación
 
 assets/
   css/estilos.css       Estilos (mobile first)
-  js/main.js            Menú de celular y botón flotante de WhatsApp
+  js/main.js            Menú de celular, botón flotante y atribución (?ref=)
   fonts/                Baloo 2 y Plus Jakarta Sans (woff2, variables)
   img/                  Capturas en AVIF/WebP + PNG de respaldo, y el logo
   icons/                favicon, iconos de instalación y la tarjeta de compartir
@@ -131,13 +131,66 @@ Se edita como HTML en `tools/og-template.html` y se captura a 1200×630:
 
 Necesita Chrome o Chromium; si no lo encuentra, pásale la ruta como argumento.
 
+## Atribución desde la app (`?ref=`)
+
+Las páginas públicas de pedidos de la app llevan un footer de captación que
+enlaza a esta landing. Ese enlace es el contrato entre los dos repositorios:
+
+| Parámetro      | Lo pone la app                        | Lo usa la landing                       |
+| -------------- | ------------------------------------- | --------------------------------------- |
+| `ref`          | slug del negocio; se omite si va vacío | atribución + personalización del copy   |
+| `utm_source`   | `order_page`                          | segmentación en GA4                     |
+| `utm_medium`   | `footer`                              | segmentación en GA4                     |
+| `utm_campaign` | `viral_footer`                        | segmentación en GA4                     |
+
+Con un `ref` válido, `main.js`:
+
+1. Lo guarda en `sessionStorage` (`fruktela.ref`), para que sobreviva a las
+   recargas y a la navegación por anclas.
+2. Cambia el `?text=` de los seis enlaces `wa.me` por
+   `Hola, vi la página de {Negocio} y quiero mi prueba gratis`. Así, al llegar
+   el chat se sabe qué cliente generó el prospecto sin montar un sistema de
+   referidos.
+3. Revela la barra de bienvenida (`#bienvenida`) arriba del hero.
+
+**El nombre del negocio se humaniza a partir del slug** (`frutas-don-pepe` →
+`Frutas Don Pepe`). No hay endpoint que traduzca slug a nombre; cuando exista,
+el punto a cambiar es `humanizar()` en `main.js`. Mientras tanto, un slug sin
+letras (`12345`) se sigue atribuyendo en GA4 pero deja el copy genérico: no da
+un nombre presentable.
+
+Todo lo demás degrada al comportamiento de siempre. Se descarta el `ref` si
+falta, viene vacío, no parece un slug (`^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$`) o es
+un accidente de programación (`undefined`, `null`, `NaN`…). Sin `ref` válido la
+landing se ve y se comporta exactamente como antes.
+
+### Eventos
+
+GA4 (`G-HVF9C025X3`) recibe dos eventos propios, ambos con el `ref` vigente:
+
+- `landing_arrival` — al cargar con `ref` o `utm_source` en la URL. Lleva
+  también los tres `utm_*`. Solo cuenta la llegada real: las recargas y las
+  anclas reusan el `ref` guardado sin volver a dispararlo.
+- `landing_whatsapp_click` — al tocar cualquier enlace `wa.me`.
+
+Los valores ausentes van como `(none)` para poder segmentar por su falta. Con el
+embudo completo, `footer_cta_view → footer_cta_click → landing_arrival →
+landing_whatsapp_click`, cada caída apunta a un problema distinto: el footer no
+se ve, el copy no convence, o la landing no cierra.
+
+La medición es accesoria: si `gtag` no existe (bloqueador, snippet que no cargó)
+o lanza, las llamadas están envueltas y el enlace navega igual.
+
 ## Decisiones que conviene conocer
 
 - **Mobile first.** La base del CSS es el celular y los `@media` suben a 641 px
   y 961 px. Ojo con `.wrap`: usa `padding-inline` y no el atajo `padding`,
   porque `.nav`, `.hero` y `.menu-movil` también son `.wrap` y definen su
   propio padding vertical.
-- **Fuentes propias, no Google Fonts.** Evita una conexión a un tercero y el
+- **GA4 es la única conexión a un tercero.** Se cargó por el embudo de
+  captación, que no se puede medir de otra forma en un sitio estático. Va
+  `async` y nada de la página depende de que responda.
+- **Fuentes propias, no Google Fonts.** Evita otra conexión a un tercero y el
   parpadeo asociado. Ambas familias son variables, así que un archivo por rango
   unicode cubre todos los pesos: cuatro `@font-face` en total. Solo se incluyen
   `latin` y `latin-ext`.
