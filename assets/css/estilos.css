@@ -242,6 +242,19 @@ footer :focus-visible { outline-color: #fff; }
 .menu-movil .btn { margin-top: 18px; color: var(--naranja-oscuro); }
 .menu-movil .btn:hover { color: var(--naranja-tinta); }
 
+/* ---------- Bienvenida con atribución ----------
+   Aparece solo cuando el visitante llega con ?ref=. Va dentro de la banda
+   naranja pero un tono más oscuro, para que se lea como aviso contextual y no
+   como una costura entre el encabezado y el hero. */
+.bienvenida {
+  background: var(--naranja-oscuro);
+  color: rgba(255, 255, 255, .94);
+  padding-block: 12px;
+}
+.bienvenida[hidden] { display: none; }
+.bienvenida p { font-size: 15px; line-height: 1.45; }
+.bienvenida b { color: #fff; font-weight: 700; }
+
 /* ---------- Hero ---------- */
 .hero {
   display: grid;
